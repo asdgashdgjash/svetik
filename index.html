@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Светику♡</title>
+
+<link rel="icon" type="image/png" href="favicon.png">
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #ffebee;
+  color: #c2185b;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Фон эмодзи */
+.background-emojis {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  font-size: 1.8rem;
+  opacity: 0.25;
+  z-index: 1;
+}
+
+.emoji {
+  position: absolute;
+  animation: float linear infinite;
+}
+
+@keyframes float {
+  from { transform: translateY(110vh) rotate(0deg); }
+  to   { transform: translateY(-30vh) rotate(360deg); }
+}
+
+h1 {
+  font-size: 3.8rem;
+  margin-bottom: 40px;
+  text-align: center;
+  z-index: 10;
+  transition: opacity 0.5s;
+}
+
+.buttons {
+  display: flex;
+  gap: 180px;
+  z-index: 10;
+  transition: opacity 0.5s;
+}
+
+button {
+  font-size: 2.1rem;
+  padding: 18px 60px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transition: transform 0.2s;
+}
+
+#yes {
+  background: #e91e63;
+  color: #fff;
+}
+#yes:hover { transform: scale(1.12); }
+
+#no {
+  background: #78909c;
+  color: #fff;
+  user-select: none;
+}
+
+/* Экран любви */
+.love-message {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(255,245,247,0.97);
+  z-index: 20;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  text-align: center;
+  animation: fadeZoom 0.8s ease-out;
+}
+
+@keyframes fadeZoom {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Фото */
+.photos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.photos img {
+  max-width: 300px;
+  border-radius: 18px;
+  border: 8px solid #fff;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  opacity: 0;
+  transform: translateY(40px);
+  animation: photoIn 0.8s ease forwards;
+}
+
+@keyframes photoIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Сердечки */
+.heart {
+  position: fixed;
+  font-size: 2rem;
+  pointer-events: none;
+  animation: pop 1.2s ease-out forwards;
+  z-index: 30;
+}
+
+@keyframes pop {
+  0% { transform: scale(0); opacity: 1; }
+  70% { transform: scale(1.4); }
+  100% { opacity: 0; }
+}
+
+@media (max-width: 700px) {
+  h1 { font-size: 2.6rem; }
+  .buttons { gap: 60px; flex-direction: column; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="background-emojis" id="emojis"></div>
+
+<h1 id="question">Ты меня любишь?</h1>
+
+<div class="buttons" id="buttons">
+  <button id="yes">Да</button>
+  <button id="no">Нет</button>
+</div>
+
+<div class="love-message" id="love">
+  <div>Я тоже тебя очень люблю 💖</div>
+  <div class="photos">
+    <img src="1.jpg" style="animation-delay:0s">
+    <img src="2.jpg" style="animation-delay:0.3s">
+    <img src="3.jpg" style="animation-delay:0.6s">
+  </div>
+</div>
+
+<script>
+// Кнопка "Нет" убегает
+const noBtn = document.getElementById('no');
+noBtn.addEventListener('mouseover', () => {
+  noBtn.style.position = 'fixed';
+  noBtn.style.left = Math.random() * (innerWidth - 150) + 'px';
+  noBtn.style.top  = Math.random() * (innerHeight - 100) + 'px';
+});
+
+// Кнопка "Да"
+document.getElementById('yes').addEventListener('click', e => {
+  document.getElementById('question').style.opacity = 0;
+  document.getElementById('buttons').style.opacity = 0;
+
+  // Сердечки
+  for (let i = 0; i < 20; i++) {
+    const h = document.createElement('div');
+    h.className = 'heart';
+    h.textContent = '💖';
+    h.style.left = e.clientX + (Math.random()*100-50) + 'px';
+    h.style.top  = e.clientY + (Math.random()*100-50) + 'px';
+    h.style.fontSize = 20 + Math.random()*30 + 'px';
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 1200);
+  }
+
+  setTimeout(() => {
+    document.getElementById('love').style.display = 'flex';
+  }, 500);
+});
+
+// Фон эмодзи
+const emojis = ['😻','😽','😺','💖','💞','🩷','🐾','💕'];
+const container = document.getElementById('emojis');
+
+setInterval(() => {
+  const e = document.createElement('div');
+  e.className = 'emoji';
+  e.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+  e.style.left = Math.random()*100 + 'vw';
+  e.style.animationDuration = 12 + Math.random()*12 + 's';
+  container.appendChild(e);
+  setTimeout(() => e.remove(), 30000);
+}, 400);
+</script>
+
+</body>
+</html>
